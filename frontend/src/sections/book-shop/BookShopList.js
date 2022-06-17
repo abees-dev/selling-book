@@ -2,7 +2,7 @@ import Iconify from '@/components/Iconify';
 import * as Scroll from 'react-scroll';
 import Image from '@/components/Image';
 import axios from '@/utils/axios';
-import { Box, Button, Card, Grid, Rating, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Pagination, Rating, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import BookShopSearch from './BookShopSearch';
@@ -12,40 +12,36 @@ import orderBookAtom from '@/recoils/oderBookAtom';
 import userAtom from '@/recoils/userAtom';
 import { useNavigate } from 'react-router-dom';
 import { PATH_AUTH } from '@/routes/paths';
+import { useSnackbar } from 'notistack';
+import TabButton from '@/components/TabButton';
+import PaginateCustom from '@/components/PaginationCustom';
+import { set } from 'nprogress';
 
 const BUTTON_LIST = [
   {
     title: 'all books',
     color: 'primary',
+    type: 'all',
   },
   {
     title: 'Kindergarten',
     color: 'inherit',
+    type: 'Kindergarten',
   },
   {
     title: 'High School',
     color: 'inherit',
+    type: 'High School',
   },
   {
     title: 'College',
     color: 'inherit',
+    type: 'College',
   },
 ];
 
 const RootStyle = styled('div')(({ theme }) => ({
   marginTop: theme.spacing(5),
-}));
-
-const ButtonStyle = styled(Button)(({ theme }) => ({
-  fontWeight: 500,
-  fontSize: theme.typography.fontSize,
-}));
-
-const NavigateStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: theme.spacing(5),
-  marginBottom: theme.spacing(2),
 }));
 
 const BookShopList = () => {
@@ -55,7 +51,12 @@ const BookShopList = () => {
 
   const [paginate, setPaginate] = useState(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
+
+  const [buttonType, setButtonType] = useState(null);
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const scroll = Scroll.animateScroll;
 
   const { isAuthenticated } = useRecoilValue(userAtom);
@@ -63,32 +64,37 @@ const BookShopList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/api/books/list`, { params: { pages: currentPage, limit: 6 } });
+        const res = await axios.get(`/api/books/list`, { params: { pages: page, limit: 6 } });
         setBookData(res.books);
         setPaginate(res.paginate);
       } catch (error) {
         console.log(error);
       }
     };
-
+    console.log('mounted');
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [page]);
 
-  const handleNextPage = () => {
-    if (paginate.nextPage) {
-      setCurrentPage((prev) => prev + 1);
+  // const handleNextPage = () => {
+  //   if (paginate.nextPage) {
+  //     setCurrentPage((prev) => prev + 1);
 
-      scroll.scrollTo(300);
-    }
-  };
+  //     scroll.scrollTo(300);
+  //   }
+  // };
 
-  const handlePrevPage = () => {
-    if (paginate.prevPage) {
-      setCurrentPage((prev) => prev - 1);
+  // const handlePrevPage = () => {
+  //   if (paginate.prevPage) {
+  //     setCurrentPage((prev) => prev - 1);
 
-      scroll.scrollTo(300);
-    }
+  //     scroll.scrollTo(300);
+  //   }
+  // };
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+    scroll.scrollTo(300);
   };
 
   const navigate = useNavigate();
@@ -102,8 +108,21 @@ const BookShopList = () => {
         }
         return [...prev, { ...order, quantity: 1 }];
       });
+      enqueueSnackbar('Add to cart successfully');
     } else {
+      enqueueSnackbar('Please login before adding cart', { variant: 'error' });
+
       navigate(PATH_AUTH.login);
+    }
+  };
+
+  const handleSearchButton = async (type) => {
+    try {
+      const res = await axios.get('/api/books/list', { params: { type: type } });
+      setBookData(res.books);
+      setButtonType(type);
+    } catch (error) {
+      return error;
     }
   };
 
@@ -111,9 +130,12 @@ const BookShopList = () => {
     <RootStyle>
       <Stack direction="row" spacing={2}>
         {BUTTON_LIST.map((item, index) => (
-          <ButtonStyle key={index} variant="contained" size="large" color={item.color}>
-            {item.title}
-          </ButtonStyle>
+          <TabButton
+            key={index}
+            title={item.title}
+            handleClick={() => handleSearchButton(item.type)}
+            color={buttonType === item.type ? 'primary' : 'inherit'}
+          />
         ))}
       </Stack>
       <BookShopSearch />
@@ -124,28 +146,7 @@ const BookShopList = () => {
           </Grid>
         ))}
       </Grid>
-      <NavigateStyle>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Button
-            sx={{ minWidth: 0, p: 1, bgcolor: !paginate?.prevPage ? 'primary.light' : '' }}
-            variant="contained"
-            onClick={handlePrevPage}
-          >
-            <Iconify icon="ic:round-navigate-before" sx={{ width: 25, height: 25 }} />
-          </Button>
-          <Typography variant="body1">Page</Typography>
-          <Typography variant="body1">{currentPage}</Typography>
-          <Typography variant="body1">of</Typography>
-          <Typography variant="body1">{paginate?.totalPages}</Typography>
-          <Button
-            sx={{ minWidth: 0, p: 1, bgcolor: !paginate?.nextPage ? 'primary.light' : '' }}
-            variant="contained"
-            onClick={handleNextPage}
-          >
-            <Iconify icon="ic:round-navigate-next" sx={{ width: 25, height: 25 }} />
-          </Button>
-        </Stack>
-      </NavigateStyle>
+      <PaginateCustom paginate={paginate || {}} onChange={handleChangePage} />
     </RootStyle>
   );
 };

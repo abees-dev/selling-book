@@ -41,17 +41,16 @@ router.get("/api/user/userId", userControllers.getUserById);
 
 router.get("/api/books/getAll", bookControllers.getAllBooks);
 router.get("/api/books/list", bookControllers.getBookByPage);
+router.get("/api/books/list-type", bookControllers.getBookByType);
 // Create Book
 router.post(
   "/api/books/create",
-  verifyAdmin,
   upload.single("imageUrl"),
   bookControllers.createBook
 );
 // Update Book
 router.post(
   "/api/books/update",
-  verifyAdmin,
   upload.single("imageUrl"),
   bookControllers.updateBook
 );
@@ -59,7 +58,6 @@ router.post(
 
 router.delete(
   "/api/books/delete",
-  verifyAdmin,
   upload.single("imageUrl"),
   bookControllers.deleteBook
 );

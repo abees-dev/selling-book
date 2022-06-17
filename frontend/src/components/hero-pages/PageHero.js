@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Card, CardMedia, Container, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import React from 'react';
@@ -11,23 +12,22 @@ const HeroStyle = styled(Card)(({ theme }) => ({
   minHeight: 270,
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
 }));
-const BookShopHero = () => {
+const PageHero = ({ title, subtitle, image, sx, ...other }) => {
   return (
-    <RootStyle>
+    <RootStyle sx={{ ...sx }}>
       <Container maxWidth="lg">
         <HeroStyle>
-          <Stack direction="row" alignItems="center" spacing={15} sx={{ height: 1 }}>
-            <Typography variant="h4">
-              Eduvi Online <br />
-              Book Shop
+          <Stack direction="row" alignItems="center" justifyContent="space-evenly" sx={{ height: 1, width: 1 }}>
+            <Typography variant="h4" sx={{ ml: 5 }}>
+              {title} <br />
+              {subtitle}
             </Typography>
             <CardMedia
               component="img"
               height="210"
-              image="https://res.cloudinary.com/abeesdev/image/upload/v1655302553/Logo/t5gmzy3mxbjnk0asa65l.png"
-              sx={{ maxWidth: 374 }}
+              image={image}
+              sx={{ maxWidth: 500, objectFit: 'contain' }}
             ></CardMedia>
           </Stack>
         </HeroStyle>
@@ -36,4 +36,10 @@ const BookShopHero = () => {
   );
 };
 
-export default BookShopHero;
+PageHero.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  image: PropTypes.string,
+};
+
+export default PageHero;

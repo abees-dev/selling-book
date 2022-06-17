@@ -1,11 +1,11 @@
 import { m } from 'framer-motion';
-import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Avatar, Box, Button, Card, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
 // hooks
 // components
-import { MotionViewport, varFade } from '../../components/animate';
+import { MotionViewport, varFade } from '@/components/animate';
+import { CardStandard } from '@/components/standard';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function HomeColorPresets() {
+export default function HomeStandardClass() {
   return (
     <RootStyle>
       <Container component={MotionViewport} sx={{ position: 'relative', textAlign: 'center' }}>
@@ -97,7 +97,7 @@ export default function HomeColorPresets() {
           <Grid container spacing={5}>
             {LESSON_LIST.map((item, index) => (
               <Grid key={index} item lg={3} md={4} sm={6} xs={12}>
-                <CardLesson title={item.title} description={item.description} image={item.image} />
+                <CardStandard title={item.title} description={item.description} image={item.image} />
               </Grid>
             ))}
           </Grid>
@@ -111,40 +111,3 @@ export default function HomeColorPresets() {
     </RootStyle>
   );
 }
-
-const CardLesson = ({ image, title, description }) => {
-  const DescriptionStyle = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(3),
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitLineClamp: '4',
-    WebkitBoxOrient: 'vertical',
-    color: theme.palette.text.secondary,
-  }));
-
-  return (
-    <Card sx={{ px: 2, py: 3, minHeight: 256 }}>
-      <Stack alignItems="center">
-        <Avatar component={m.div} variants={varFade().inDown} src={image} sx={{ mb: 2 }} />
-        <Typography component={m.div} variants={varFade().inLeft} variant="h6" sx={{ mb: 3 }}>
-          {title}
-        </Typography>
-        <DescriptionStyle variant="body2" component={m.div} variants={varFade().inUp}>
-          {description}
-        </DescriptionStyle>
-        <Box>
-          <Button variant="outlined" component={m.div} variants={varFade().inRight}>
-            Class Details
-          </Button>
-        </Box>
-      </Stack>
-    </Card>
-  );
-};
-
-CardLesson.propTypes = {
-  image: PropTypes.string,
-  title: PropTypes.string,
-  description: PropTypes.string,
-};

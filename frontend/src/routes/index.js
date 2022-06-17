@@ -10,9 +10,7 @@ import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 import LoadingScreen from '../components/LoadingScreen';
-import { ProductBookList } from '@/pages/dashboard/products';
-import BookShop from '@/pages/BookShop';
-import BookShopCheckOut from '@/sections/book-shop/BookShopCheckOut';
+
 // components
 
 // ----------------------------------------------------------------------
@@ -110,6 +108,7 @@ export default function Router() {
           path: 'book-shop/checkout',
           element: <BookShopCheckOut />,
         },
+        { path: 'for-courses', element: <Courses /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -130,7 +129,13 @@ const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+// Products
+const ProductBookList = Loadable(lazy(() => import('../pages/dashboard/products/ProductBookList')));
 
+// Page
+const BookShop = Loadable(lazy(() => import('../pages/BookShop')));
+const BookShopCheckOut = Loadable(lazy(() => import('../pages/BookShopCheckOut')));
+const Courses = Loadable(lazy(() => import('../pages/Courses')));
 // MAIN
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));

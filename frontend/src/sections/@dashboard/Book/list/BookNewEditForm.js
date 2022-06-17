@@ -1,4 +1,4 @@
-import { FormProvider, RHFTextField, RHFUploadAvatar } from '@/components/hook-form';
+import { FormProvider, RHFSelect, RHFTextField, RHFUploadAvatar } from '@/components/hook-form';
 import { fData } from '@/utils/formatNumber';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -19,6 +19,7 @@ const BookNewEditForm = ({ isEdit = false, currentBook, onSuccess }) => {
     imageUrl: Yup.mixed().required('Image is required'),
   });
 
+  console.log(currentBook);
   const defaultValues = useMemo(
     () => ({
       title: currentBook?.title || 'The Three Musketeers',
@@ -27,6 +28,7 @@ const BookNewEditForm = ({ isEdit = false, currentBook, onSuccess }) => {
       author: currentBook?.author || 'Alexandre Dumas',
       description: currentBook?.description || 'Desc',
       unit: currentBook?.unit || 'Books',
+      booksType: currentBook?.booksType || 'Kindergarten',
       imageUrl: currentBook?.imageUrl || null,
     }),
     [currentBook]
@@ -56,6 +58,7 @@ const BookNewEditForm = ({ isEdit = false, currentBook, onSuccess }) => {
     formData.append('author', data.author);
     formData.append('description)', data.description);
     formData.append('unit', data.unit);
+    formData.append('booksType', data.booksType);
     formData.append('imageUrl', data.imageUrl);
 
     try {
@@ -95,6 +98,22 @@ const BookNewEditForm = ({ isEdit = false, currentBook, onSuccess }) => {
     },
     [setValue]
   );
+
+  const BOOK_TYPE = [
+    {
+      id: '1',
+      label: 'Kindergarten',
+    },
+    {
+      id: '2',
+      label: 'High school',
+    },
+    {
+      id: '3',
+      label: 'College',
+    },
+  ];
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2}>
@@ -142,7 +161,15 @@ const BookNewEditForm = ({ isEdit = false, currentBook, onSuccess }) => {
 
               <RHFTextField name="author" label="Author" />
               <RHFTextField name="unit" label="unit" />
-              <RHFTextField name="description" label="Description" />
+              <RHFSelect name="booksType" label="Books type" placeholder="Country">
+                <option value="" />
+                {BOOK_TYPE.map((option) => (
+                  <option key={option.code} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
+              <RHFTextField name="description" label="Description" fullWidth />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

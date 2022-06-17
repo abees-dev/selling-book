@@ -5,7 +5,7 @@ import cloudinary from "../utils/cloudinary";
 class bookController {
   async getAllBooks(req, res) {
     try {
-      const books = await Books.find();
+      const books = await Books.find().sort({ updatedAt: -1 });
       return res.status(200).json({ success: true, books });
     } catch (error) {
       return res.status(500).json({
@@ -16,22 +16,48 @@ class bookController {
     }
   }
   async getBookByPage(req, res) {
-    let { pages, limit } = req.query;
+    let { pages, limit, search, type } = req.query;
     if (!pages) pages = 1;
-    if (!limit) limit = 4;
+    if (!limit) limit = 6;
     try {
-      const books = await Books.paginate({}, { page: pages, limit });
-      const { docs, page, prevPage, nextPage, totalPages } = books;
-      return res.status(200).json({
-        success: true,
-        books: docs,
-        paginate: {
-          page,
-          prevPage,
-          nextPage,
-          totalPages,
-        },
-      });
+      if (search) {
+        const books = await Books.find({
+          title: { $regex: search, $options: "gi" },
+        })
+          .limit(limit)
+          .sort({ updatedAt: -1 });
+
+        return res.status(200).json({
+          success: true,
+          books,
+        });
+      }
+      if (type && type !== "all") {
+        const books = await Books.find({
+          booksType: { $regex: type, $options: "gi" },
+        })
+          .limit(limit)
+          .sort({ updatedAt: -1 });
+
+        return res.status(200).json({
+          success: true,
+          books,
+        });
+      }
+      if (type === "all" || !type) {
+        const books = await Books.paginate({}, { page: pages, limit });
+        const { docs, page, prevPage, nextPage, totalPages } = books;
+        return res.status(200).json({
+          success: true,
+          books: docs,
+          paginate: {
+            page,
+            prevPage,
+            nextPage,
+            totalPages,
+          },
+        });
+      }
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -41,6 +67,8 @@ class bookController {
       });
     }
   }
+
+  async getBookByType(req, res) {}
 
   async deleteBook(req, res) {
     try {
@@ -70,8 +98,15 @@ class bookController {
 
   async createBook(req, res) {
     try {
-      const { title, author, price, subtitle, description, imageUrl } =
-        req.body;
+      const {
+        title,
+        author,
+        price,
+        subtitle,
+        description,
+        booksType,
+        imageUrl,
+      } = req.body;
 
       const id = mongoose.Types.ObjectId();
 
@@ -96,6 +131,7 @@ class bookController {
         title: title,
         author: author,
         price: price,
+        booksType: booksType,
         description: description,
         imageUrl: upload?.secure_url,
       });
@@ -118,8 +154,15 @@ class bookController {
   async updateBook(req, res) {
     try {
       const id = req.query.id;
-      const { title, subtitle, author, price, description, imageUrl } =
-        req.body;
+      const {
+        title,
+        subtitle,
+        author,
+        price,
+        description,
+        booksType,
+        imageUrl,
+      } = req.body;
       let upload = null;
       if (!id)
         return res
@@ -144,6 +187,7 @@ class bookController {
           author,
           price,
           description,
+          booksType,
           imageUrl: upload?.secure_url,
         },
         { new: true }

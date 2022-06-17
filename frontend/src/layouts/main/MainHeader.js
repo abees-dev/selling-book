@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Button, AppBar, Toolbar, Container, Stack } from '@mui/material';
@@ -17,8 +17,11 @@ import Label from '../../components/Label';
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
-import Iconify from '@/components/Iconify';
 import CartPopover from './CartPopover';
+import userAtom from '@/recoils/userAtom';
+import { useRecoilValue } from 'recoil';
+import AccountPopover from './AccountPopover';
+import { PATH_AUTH } from '@/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +58,8 @@ export default function MainHeader() {
 
   const { pathname } = useLocation();
 
+  const { user } = useRecoilValue(userAtom);
+
   const isDesktop = useResponsive('up', 'md');
 
   const isHome = pathname === '/';
@@ -88,19 +93,20 @@ export default function MainHeader() {
 
           <Stack
             direction="row"
-            spacing={2}
+            spacing={4}
             sx={{
-              ...(isHome && { color: 'common.white' }),
+              ...(isHome ? { color: 'common.white' } : { color: 'text.primary' }),
               ...(isOffset && { color: 'text.primary' }),
             }}
           >
             <CartPopover />
-            <Button
-              color="inherit"
-              endIcon={<Iconify icon="codicon:account" sx={{ color: (theme) => theme.palette.primary.main }} />}
-            >
-              my account
-            </Button>
+            {user ? (
+              <AccountPopover />
+            ) : (
+              <Button component={Link} to={PATH_AUTH.login} color="primary" variant="contained">
+                Login
+              </Button>
+            )}
           </Stack>
 
           {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}

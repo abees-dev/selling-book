@@ -133,7 +133,7 @@ export default function ProductBookList() {
       if (id) {
         return prev.map((item) => (item._id === id ? data : item));
       }
-      return [...prev, data];
+      return [data, ...prev];
     });
     setOpenDialog(false);
   };

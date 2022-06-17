@@ -12,7 +12,7 @@ const bookSchema = new Schema(
     author: { type: String },
     description: { type: String },
     imageUrl: { type: String },
-    bookType: { type: String, default: "Books" },
+    booksType: { type: String, default: "Books" },
     ratting: { type: Number, default: 4 },
   },
   { timestamps: true }

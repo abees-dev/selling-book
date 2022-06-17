@@ -7,9 +7,9 @@ import Page from '../components/Page';
 import {
   HomeHero,
   HomeIntroduce,
-  HomeLessonStudent,
   HomeRegisterCourse,
   HomeMentor,
+  HomeStandardClass,
   // HomeAdvertisement,
   // HomeLookingFor,
   // HomePricingPlans,
@@ -38,7 +38,7 @@ export default function HomePage() {
         <ContentStyle>
           <HomeIntroduce />
 
-          <HomeLessonStudent />
+          <HomeStandardClass />
 
           <HomeRegisterCourse />
 
