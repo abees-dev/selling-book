@@ -28,13 +28,12 @@ const navConfig = [
     items: [
       // Product
       {
-        title: 'Books ',
-        path: PATH_DASHBOARD.books.root,
-        icon: ICONS.books,
+        title: 'Products',
+        path: PATH_DASHBOARD.products.root,
+        icon: ICONS.product,
         children: [
-          { title: 'list', path: PATH_DASHBOARD.books.list },
-          { title: 'create', path: PATH_DASHBOARD.books.new },
-          { title: 'edit', path: PATH_DASHBOARD.books.demoEdit },
+          { title: 'books', path: PATH_DASHBOARD.products.books },
+          { title: 'Course', path: PATH_DASHBOARD.products.course },
         ],
       },
     ],

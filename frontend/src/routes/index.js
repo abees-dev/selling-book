@@ -76,10 +76,11 @@ export default function Router() {
           ],
         },
         {
-          path: 'books',
+          path: 'products',
           children: [
             { element: <Navigate to="/dashboard/books/list" replace />, index: true },
-            { path: 'list', element: <ProductBookList /> },
+            { path: 'books', element: <ProductBookList /> },
+            { path: 'course', element: <CourseList /> },
           ],
         },
       ],
@@ -130,7 +131,10 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 // Products
-const ProductBookList = Loadable(lazy(() => import('../pages/dashboard/products/ProductBookList')));
+const ProductBookList = Loadable(lazy(() => import('../pages/dashboard/books/BookList')));
+
+// Courses
+const CourseList = Loadable(lazy(() => import('../pages/dashboard/courses/CourseList')));
 
 // Page
 const BookShop = Loadable(lazy(() => import('../pages/BookShop')));

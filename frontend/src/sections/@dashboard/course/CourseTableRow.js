@@ -3,19 +3,19 @@ import { useState } from 'react';
 // @mui
 import { Avatar, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 // components
-import Iconify from '../../../../components/Iconify';
-import { TableMoreMenu } from '../../../../components/table';
+import Iconify from '../../../components/Iconify';
+import { TableMoreMenu } from '../../../components/table';
 
 // ----------------------------------------------------------------------
 
-UserTableRow.propTypes = {
+CourseTableRow.propTypes = {
   row: PropTypes.object,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, onEditRow, onDeleteRow }) {
-  const { title, unit, price, author, imageUrl } = row;
+export default function CourseTableRow({ row, onEditRow, onDeleteRow }) {
+  const { title, instructor, price, author, imageUrl, language } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -36,11 +36,12 @@ export default function UserTableRow({ row, onEditRow, onDeleteRow }) {
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{unit}</TableCell>
-
-      <TableCell align="left">{price}$</TableCell>
+      <TableCell align="left">{instructor}</TableCell>
 
       <TableCell align="left">{author}</TableCell>
+
+      <TableCell align="left">{language}</TableCell>
+      <TableCell align="left">{price}$</TableCell>
 
       <TableCell align="right">
         <TableMoreMenu

@@ -45,13 +45,13 @@ export const PATH_DASHBOARD = {
     edit: (name) => path(ROOTS_DASHBOARD, `/user/${name}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
   },
-  books: {
-    root: path(ROOTS_DASHBOARD, '/books'),
-    new: path(ROOTS_DASHBOARD, '/books/new'),
-    list: path(ROOTS_DASHBOARD, '/books/list'),
-    cards: path(ROOTS_DASHBOARD, '/books/cards'),
-    edit: (name) => path(ROOTS_DASHBOARD, `/books/${name}/edit`),
-    demoEdit: path(ROOTS_DASHBOARD, `/books/reece-chung/edit`),
+  products: {
+    root: path(ROOTS_DASHBOARD, '/products'),
+    new: path(ROOTS_DASHBOARD, '/products/new'),
+    books: path(ROOTS_DASHBOARD, '/products/books'),
+    course: path(ROOTS_DASHBOARD, '/products/course'),
+    cards: path(ROOTS_DASHBOARD, '/products/cards'),
+    edit: (name) => path(ROOTS_DASHBOARD, `/products/${name}/edit`),
   },
 };
 

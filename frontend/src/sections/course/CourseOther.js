@@ -6,8 +6,9 @@ import Image from '@/components/Image';
 import TextMaxLine from '@/components/TextMaxLine';
 import { Button, Card, Container, Grid, Rating, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PaginateCustom from '@/components/PaginationCustom';
+import axios from '@/utils/axios';
 
 const COURSE_OTHER = [
   {
@@ -52,15 +53,40 @@ const COURSE_OTHER = [
   },
 ];
 
-const paginate = {
-  currentPage: 1,
-  totalPages: 3,
-};
+// const paginate = {
+//   currentPage: 1,
+//   totalPages: 3,
+// };
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: theme.spacing(5),
 }));
 const CourseOther = () => {
+  const [course, setCourse] = useState([]);
+
+  const [page, setPage] = useState(1);
+
+  const [paginate, setPaginate] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('/api/course/get-course-by-page', { params: { pages: page } });
+        console.log(res);
+        setCourse(res.data);
+        setPaginate(res.paginate);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+    console.log('mounted');
+  }, [page]);
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
   return (
     <RootStyle>
       <Container maxWidth="lg" component={MotionViewport}>
@@ -68,47 +94,36 @@ const CourseOther = () => {
           Other Courses For High School
         </Typography>
         <Grid container spacing={3}>
-          {COURSE_OTHER.map((item, index) => (
+          {course?.map((item, index) => (
             <Grid key={index} item lg={6}>
               <CartCourse items={item} />
             </Grid>
           ))}
         </Grid>
-        <PaginateCustom paginate={paginate} />
+        <PaginateCustom paginate={paginate || {}} onChange={handleChangePage} />
       </Container>
     </RootStyle>
   );
 };
 
 const CartCourse = ({ items }) => {
-  const { title, rating, price } = items;
+  const { title, imageUrl, price } = items;
   return (
     <Card sx={{ p: 2, maxHeight: 133 }}>
       <Stack direction="row" spacing={2}>
-        <Image
-          src="https://img2.thuthuatphanmem.vn/uploads/2019/01/04/anh-co-gai-de-thuong_025058983.jpg"
-          sx={{ width: 1 / 4, borderRadius: 1 }}
-        />
+        <Image src={imageUrl} sx={{ width: 1 / 4, borderRadius: 1 }} />
         <Stack sx={{ flex: 1 }} spacing={0.5}>
-          <m.div variants={varFade().inDown}>
-            <TextMaxLine line={1} variant="subtitle1">
-              {title}
-            </TextMaxLine>
-          </m.div>
-          <m.div variants={varFlip().inX}>
-            <Rating defaultValue={rating} precision={0.5} readOnly size="small" />
-          </m.div>
+          <TextMaxLine line={1} variant="subtitle1">
+            {title}
+          </TextMaxLine>
+          <Rating defaultValue={5} precision={0.5} readOnly size="small" />
           <Stack direction="row" justifyContent="space-between" alignItems="baseline">
-            <m.div variants={varFade().inLeft}>
-              <Typography variant="subtitle2" color="error">
-                ${price}
-              </Typography>
-            </m.div>
-            <m.div variants={varFade().inRight}>
-              <Button variant="contained" sx={{ bgcolor: 'primary.light', p: 1.5, minWidth: 0 }}>
-                <Iconify icon="bi:cart" />
-              </Button>
-            </m.div>
+            <Typography variant="subtitle2" color="error">
+              ${price}
+            </Typography>
+            <Button variant="contained" sx={{ bgcolor: 'primary.light', p: 1.5, minWidth: 0 }}>
+              <Iconify icon="bi:cart" />
+            </Button>
           </Stack>
         </Stack>
       </Stack>

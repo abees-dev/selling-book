@@ -161,7 +161,7 @@ const BookNewEditForm = ({ isEdit = false, currentBook, onSuccess }) => {
 
               <RHFTextField name="author" label="Author" />
               <RHFTextField name="unit" label="unit" />
-              <RHFSelect name="booksType" label="Books type" placeholder="Country">
+              <RHFSelect name="booksType" label="Books type" placeholder="Books type">
                 <option value="" />
                 {BOOK_TYPE.map((option) => (
                   <option key={option.code} value={option.label}>

@@ -33,8 +33,7 @@ import { TableEmptyRows, TableHeadCustom, TableNoData } from '@/components/table
 import axios from '@/utils/axios';
 import { useSnackbar } from 'notistack';
 import { DialogAnimate } from '@/components/animate';
-import { BookTableRow, BookTableToolbar } from '@/sections/@dashboard/Book/list';
-import BookNewEditForm from '@/sections/@dashboard/Book/list/BookNewEditForm';
+import { BookTableRow, BookTableToolbar, BookNewEditForm } from '@/sections/@dashboard/Book';
 
 // ----------------------------------------------------------------------
 
@@ -116,7 +115,7 @@ export default function ProductBookList() {
         params: { id: id },
       });
       deleteSuccess(id);
-      enqueueSnackbar('Delete user successfully');
+      enqueueSnackbar('Delete Book successfully');
     } catch (error) {
       console.log(error);
     }
@@ -179,7 +178,7 @@ export default function ProductBookList() {
           heading="Books List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Books', href: PATH_DASHBOARD.books.root },
+            { name: 'Books', href: PATH_DASHBOARD.products.root },
             { name: 'List' },
           ]}
           action={
